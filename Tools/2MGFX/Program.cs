@@ -7,7 +7,7 @@ using System.IO;
 
 namespace TwoMGFX
 {
-    public static class Program
+        public static class Program
     {
         public static int Main(string[] args)
         {
@@ -16,8 +16,9 @@ namespace TwoMGFX
                 Console.Error.WriteLine("The MonoGame content tools only work on a 64bit OS.");
                 return -1;
             }
-
             var options = new Options();
+
+            Options.CurrentOptions = options;
             var parser = new CommandLineParser(options);
             parser.Title = "2MGFX - The MonoGame Effect compiler.";
 

@@ -6,6 +6,8 @@ namespace TwoMGFX
 {
     public class Options
     {
+
+        public static Options CurrentOptions;
         [CommandLineParser.Required]
         public string SourceFile;
 

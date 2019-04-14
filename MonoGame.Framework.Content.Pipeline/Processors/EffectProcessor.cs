@@ -52,6 +52,7 @@ namespace Microsoft.Xna.Framework.Content.Pipeline.Processors
         {
 #if WINDOWS
             var options = new Options();
+            Options.CurrentOptions = options;
             options.SourceFile = input.Identity.SourceFilename;
 
             options.Profile = ShaderProfile.ForPlatform(context.TargetPlatform.ToString());
