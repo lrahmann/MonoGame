@@ -1,15 +1,15 @@
 # MonoGame
 
-One framework for creating powerful cross-platform games.  The spiritual successor to XNA with 1000's of titles shipped across desktop, mobile, and console platforms.  [MonoGame](http://www.monogame.net/) is a fully managed .NET open source game framework without any black boxes.  Create, develop and distribute your games your way.
+One framework for creating powerful cross-platform games.  The spiritual successor to XNA with thousands of titles shipped across desktop, mobile, and console platforms.  [MonoGame](http://www.monogame.net/) is a fully managed .NET open source game framework without any black boxes.  Create, develop and distribute your games your way.
 
 [![Join the chat at https://gitter.im/MonoGame/MonoGame](https://badges.gitter.im/MonoGame/MonoGame.svg)](https://gitter.im/MonoGame/MonoGame?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
- - [Build Status](#build-status)
- - [Supported Platforms](#supported-platforms)
- - [Support and Contributions](#support-and-contributions)
- - [Source Code](#source-code)
- - [Helpful Links](#helpful-links)
- - [License](#license)
+ * [Build Status](#build-status)
+ * [Supported Platforms](#supported-platforms)
+ * [Support and Contributions](#support-and-contributions)
+ * [Source Code](#source-code)
+ * [Helpful Links](#helpful-links)
+ * [License](#license)
  
 
 ## Build Status
@@ -31,19 +31,22 @@ Our [build server](http://teamcity.monogame.net/?guest=1) builds, tests, and pac
 
 We support a growing list of platforms across the desktop, mobile, and console space.  If there is a platform we don't support, please [make a request](https://github.com/MonoGame/MonoGame/issues) or [come help us](CONTRIBUTING.md) add it.
 
-- Desktop PCs
- * Windows Store Apps (8, 8.1 and 10)
- * Windows (OpenGL & DirectX)
- * Linux (OpenGL)
- * Mac OS X (OpenGL)
-- Mobile Devices
- * Android (OpenGL)
- * iOS (OpenGL)
- * Windows Phone (8, 8.1 and 10)
-- Consoles (for registered developers)
- * PlayStation 4
- * PlayStation Vita
- * Xbox One (both UWP and XDK)
+ * Desktop PCs
+   * Windows 10 Store Apps (UWP)
+   * Windows Win32 (OpenGL & DirectX)
+   * Linux (OpenGL)
+   * Mac OS X (OpenGL)
+ * Mobile/Tablet Devices
+   * Android (OpenGL)
+   * iPhone/iPad (OpenGL)
+   * Windows Phone 10 (UWP)
+ * Consoles (for registered developers)
+   * PlayStation 4
+   * PlayStation Vita
+   * Xbox One (both UWP and XDK)
+   * Nintendo Switch
+ * Other
+   * tvOS (OpenGL)
 
 
 ## Support and Contributions
@@ -60,7 +63,7 @@ If you are interested in contributing fixes or features to MonoGame, please read
 The full source code is available here from GitHub:
 
  * Clone the source: `git clone https://github.com/MonoGame/MonoGame.git`
- * Setup the submodules: `git submodule update --init`
+ * Set up the submodules: `git submodule update --init`
  * Run Protobuild.exe to generate project files and solutions.
    * If on Linux or Mac, run it with mono: `mono Protobuild.exe`
  * You can generate solutions for platforms that are not buildable from the current OS with: 
@@ -69,7 +72,7 @@ The full source code is available here from GitHub:
  * Open the solution for your target platform to build the game framework.
  * Open the solution for your development platform for building the pipeline and content tools.
 
-For the prerequisites for building from source please look at the [Requirements](REQUIREMENTS.md) file.
+For the prerequisites for building from source, please look at the [Requirements](REQUIREMENTS.md) file.
 
 A high level breakdown of the components of the framework:
 

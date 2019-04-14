@@ -3,7 +3,7 @@
 // file 'LICENSE.txt', which is part of this source code package.
 
 using System;
-using System.Runtime.InteropServices;
+using MonoGame.Utilities;
 
 namespace Microsoft.Xna.Framework.Graphics
 {
@@ -58,7 +58,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// </summary>
         /// <typeparam name="T">The struct you want to fill.</typeparam>
         /// <param name="offsetInBytes">The offset to the first element in the vertex buffer in bytes.</param>
-        /// <param name="data">An array of T's to be filled.
+        /// <param name="data">An array of T's to be filled.</param>
         /// <param name="startIndex">The index to start filling the data array.</param>
         /// <param name="elementCount">The number of T's to get.</param>
         /// <param name="vertexStride">The size of how a vertex buffer element should be interpreted.</param>
@@ -79,7 +79,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// </remarks>
         public void GetData<T> (int offsetInBytes, T[] data, int startIndex, int elementCount, int vertexStride = 0) where T : struct
         {
-            var elementSizeInBytes = Utilities.ReflectionHelpers.SizeOf<T>.Get();
+            var elementSizeInBytes = ReflectionHelpers.SizeOf<T>.Get();
             if (vertexStride == 0)
                 vertexStride = elementSizeInBytes;
 
@@ -106,7 +106,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
         public void GetData<T>(T[] data) where T : struct
         {
-            var elementSizeInByte = Utilities.ReflectionHelpers.SizeOf<T>.Get();
+            var elementSizeInByte = ReflectionHelpers.SizeOf<T>.Get();
             this.GetData<T>(0, data, 0, data.Length, elementSizeInByte);
         }
 
@@ -172,7 +172,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// must be within the <paramref name="data"/> array bounds.</param>
 		public void SetData<T>(T[] data, int startIndex, int elementCount) where T : struct
         {
-            var elementSizeInBytes = Utilities.ReflectionHelpers.SizeOf<T>.Get();
+            var elementSizeInBytes = ReflectionHelpers.SizeOf<T>.Get();
             SetDataInternal<T>(0, data, startIndex, elementCount, elementSizeInBytes, SetDataOptions.None);
 		}
 		
@@ -185,7 +185,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="data">Data array.</param>
         public void SetData<T>(T[] data) where T : struct
         {
-            var elementSizeInBytes = Utilities.ReflectionHelpers.SizeOf<T>.Get();
+            var elementSizeInBytes = ReflectionHelpers.SizeOf<T>.Get();
             SetDataInternal<T>(0, data, 0, data.Length, elementSizeInBytes, SetDataOptions.None);
         }
 
@@ -194,7 +194,7 @@ namespace Microsoft.Xna.Framework.Graphics
             if (data == null)
                 throw new ArgumentNullException("data");
 
-            var elementSizeInBytes = Utilities.ReflectionHelpers.SizeOf<T>.Get();
+            var elementSizeInBytes = ReflectionHelpers.SizeOf<T>.Get();
             var bufferSize = VertexCount * VertexDeclaration.VertexStride;
 
             if (vertexStride == 0)

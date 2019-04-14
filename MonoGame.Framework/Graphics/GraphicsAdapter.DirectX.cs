@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using SharpDX.Direct3D;
-using SharpDX.DXGI;
 
 namespace Microsoft.Xna.Framework.Graphics
 {
@@ -62,13 +61,8 @@ namespace Microsoft.Xna.Framework.Graphics
             adapter.SubSystemId = device.Description1.SubsystemId;
             adapter.MonitorHandle = monitor.Description.MonitorHandle;
 
-#if WINDOWS_UAP
             var desktopWidth = monitor.Description.DesktopBounds.Right - monitor.Description.DesktopBounds.Left;
             var desktopHeight = monitor.Description.DesktopBounds.Bottom - monitor.Description.DesktopBounds.Top;
-#else
-            var desktopWidth = monitor.Description.DesktopBounds.Width;
-            var desktopHeight = monitor.Description.DesktopBounds.Height;
-#endif
 
             var modes = new List<DisplayMode>();
 
@@ -122,12 +116,24 @@ namespace Microsoft.Xna.Framework.Graphics
             if(UseReferenceDevice)
                 return true;
 
+            FeatureLevel highestSupportedLevel;
+            try
+            {
+                highestSupportedLevel = SharpDX.Direct3D11.Device.GetSupportedFeatureLevel(_adapter);
+            }
+            catch (SharpDX.SharpDXException ex)
+            {
+                if (ex.ResultCode == SharpDX.DXGI.ResultCode.Unsupported) // No supported feature levels!
+                    return false;
+                throw;
+            }
+
             switch(graphicsProfile)
             {
                 case GraphicsProfile.Reach:
-                    return SharpDX.Direct3D11.Device.IsSupportedFeatureLevel(_adapter, FeatureLevel.Level_9_1);
+                    return (highestSupportedLevel >= FeatureLevel.Level_9_1);
                 case GraphicsProfile.HiDef:
-                    return SharpDX.Direct3D11.Device.IsSupportedFeatureLevel(_adapter, FeatureLevel.Level_10_0);
+                    return (highestSupportedLevel >= FeatureLevel.Level_10_0);
                 default:
                     throw new InvalidOperationException();
             }
