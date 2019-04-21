@@ -811,6 +811,9 @@ namespace Microsoft.Xna.Framework.Graphics
             var offset = Vector2.Zero;
             var firstGlyphOfLine = true;
             int crtImageIdx = 0;
+            var defaultGlyph = spriteFont.Glyphs[spriteFont.GetGlyphIndexOrDefault(spriteFont.DefaultCharacter.Value)];
+
+
             fixed (SpriteFont.Glyph* pGlyphs = spriteFont.Glyphs)
                 for (var i = 0; i < text.Length; ++i)
                 {
@@ -907,9 +910,8 @@ namespace Microsoft.Xna.Framework.Graphics
 
                     if (c == '\uE000' || c == '\uE001' || c == '\uE002')    // if we encounter a placeholder-char then draw the next image
                     {
-                        var defaultGlyph = spriteFont.Glyphs[spriteFont.GetGlyphIndexOrDefault(spriteFont.DefaultCharacter.Value)];
                         //we have two whitespaces
-                        float totalPadding = (defaultGlyph.WidthIncludingBearings);
+                        float totalPadding = 0;// (defaultGlyph.WidthIncludingBearings)/2;
                         float lineWidth = (pCurrentGlyph->BoundsInTexture.Width);
 
                         float buttonMaxHeight = (spriteFont.LineSpacing) * 0.83f;
@@ -923,7 +925,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
 
                         p = offset;
-                        p.X += (lineWidth - width) / 2;
+                        //p.X += (lineWidth - width) / 2;
                         p.Y -= (spriteFont.LineSpacing - height);
 
                         Vector2.Transform(ref p, ref transformation, out p);
