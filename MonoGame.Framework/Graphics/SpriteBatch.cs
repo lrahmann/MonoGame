@@ -740,7 +740,9 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="scale">A scaling of this string.</param>
         /// <param name="effects">Modificators for drawing. Can be combined.</param>
         /// <param name="layerDepth">A depth of the layer of this string.</param>
-        public unsafe void DrawStringWithImages(
+        /// <param name="images">A list of the images to be drawn.</param>
+        /// <returns>The actual number of drawn images.</returns>
+        public unsafe int DrawStringWithImages(
             SpriteFont spriteFont, string text, Vector2 position, Color color,
             float rotation, Vector2 origin, Vector2 scale, SpriteEffects effects, float layerDepth, List<Texture2D> images)
         {
@@ -971,6 +973,8 @@ namespace Microsoft.Xna.Framework.Graphics
 
             // We need to flush if we're using Immediate sort mode.
             FlushIfNeeded();
+
+            return crtImageIdx;
         }
 
 
@@ -987,12 +991,14 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="scale">A scaling of this string.</param>
         /// <param name="effects">Modificators for drawing. Can be combined.</param>
         /// <param name="layerDepth">A depth of the layer of this string.</param>
-        public void DrawStringWithImages(
+        /// <param name="images">A list of the images to be drawn.</param>
+        /// <returns>The actual number of drawn images.</returns>
+        public int DrawStringWithImages(
             SpriteFont spriteFont, string text, Vector2 position, Color color,
             float rotation, Vector2 origin, float scale, SpriteEffects effects, float layerDepth, List<Texture2D> images)
         {
             var scaleVec = new Vector2(scale, scale);
-            DrawStringWithImages(spriteFont, text, position, color, rotation, origin, scaleVec, effects, layerDepth, images);
+            return DrawStringWithImages(spriteFont, text, position, color, rotation, origin, scaleVec, effects, layerDepth, images);
         }
 
         /// <summary>
