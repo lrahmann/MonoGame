@@ -928,7 +928,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
                         p = offset;
                         //p.X += (lineWidth - width) / 2;
-                        p.Y -= (spriteFont.LineSpacing - height);
+                        p.Y -= (spriteFont.LineSpacing * 0.915f - height);
 
                         Vector2.Transform(ref p, ref transformation, out p);
 
