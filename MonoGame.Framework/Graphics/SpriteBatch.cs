@@ -916,6 +916,7 @@ namespace Microsoft.Xna.Framework.Graphics
                         float totalPadding = 0;// (defaultGlyph.WidthIncludingBearings)/2;
                         float lineWidth = (pCurrentGlyph->BoundsInTexture.Width);
 
+                        float charHeight = defaultGlyph.BoundsInTexture.Height;
                         float buttonMaxHeight = (spriteFont.LineSpacing) * 0.83f;
                         float buttonMaxWidth = lineWidth - totalPadding;
 
@@ -928,8 +929,8 @@ namespace Microsoft.Xna.Framework.Graphics
 
                         p = offset;
                         //p.X += (lineWidth - width) / 2;
-                        p.Y -= (spriteFont.LineSpacing * 0.915f - height);
-
+                        //p.Y += (buttonMaxHeight - height)/3;
+                        p.Y += (charHeight - height) / 2;
                         Vector2.Transform(ref p, ref transformation, out p);
 
                         item.Texture = images[crtImageIdx];
