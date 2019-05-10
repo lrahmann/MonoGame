@@ -910,7 +910,7 @@ namespace Microsoft.Xna.Framework.Graphics
                     }
 
 
-                    if (c == '\uE000' || c == '\uE001' || c == '\uE002')    // if we encounter a placeholder-char then draw the next image
+                    if (c == '\uE000' || c == '\uE001' || c == '\uE002' || c == '\uE003')    // if we encounter a placeholder-char then draw the next image
                     {
                         //we have two whitespaces
                         float totalPadding = 0;// (defaultGlyph.WidthIncludingBearings)/2;
