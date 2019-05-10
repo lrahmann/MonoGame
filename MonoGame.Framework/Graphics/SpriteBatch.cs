@@ -914,10 +914,10 @@ namespace Microsoft.Xna.Framework.Graphics
                     {
                         //we have two whitespaces
                         float totalPadding = 0;// (defaultGlyph.WidthIncludingBearings)/2;
-                        float lineWidth = (pCurrentGlyph->BoundsInTexture.Width);
+                        float lineWidth = (pCurrentGlyph->WidthIncludingBearings);
 
-                        float charHeight = defaultGlyph.BoundsInTexture.Height;
-                        float buttonMaxHeight = (spriteFont.LineSpacing) * 0.83f;
+                        float buttonMaxHeight = pCurrentGlyph->Cropping.Height;
+                        float charHeight = pCurrentGlyph->BoundsInTexture.Height;
                         float buttonMaxWidth = lineWidth - totalPadding;
 
                         var texture = images[crtImageIdx];
@@ -930,6 +930,7 @@ namespace Microsoft.Xna.Framework.Graphics
                         p = offset;
                         //p.X += (lineWidth - width) / 2;
                         //p.Y += (buttonMaxHeight - height)/3;
+
                         p.Y += (charHeight - height) / 2;
                         Vector2.Transform(ref p, ref transformation, out p);
 
