@@ -133,8 +133,8 @@ namespace Microsoft.Xna.Framework.Graphics
             if (header.Version > MGFXHeader.MGFXVersion)
                 throw new Exception("This MGFX effect seems to be for a newer release of MonoGame.");
 
-            if (header.Profile != Shader.Profile)
-                throw new Exception("This MGFX effect was built for a different platform!");
+            //if (header.Profile != Shader.Profile)
+            //    throw new Exception("This MGFX effect was built for a different platform!");
 
             return header;
         }
