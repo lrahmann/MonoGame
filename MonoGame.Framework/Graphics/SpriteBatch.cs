@@ -945,7 +945,7 @@ namespace Microsoft.Xna.Framework.Graphics
                                  p.Y,
                                 width * scale.X,
                                 height * scale.Y,
-                                 new Color(Color.White, color.A),
+                                new Color(color.A, color.A, color.A, color.A),
                                  Vector2.Zero,
                                  Vector2.One,
                                  layerDepth);
@@ -960,7 +960,7 @@ namespace Microsoft.Xna.Framework.Graphics
                                  height * scale.Y,
                                  sin,
                                  cos,
-                                 new Color(Color.White, color.A),
+                                new Color(color.A, color.A, color.A, color.A),
                                  Vector2.Zero,
                                  Vector2.One,
                                  layerDepth);
