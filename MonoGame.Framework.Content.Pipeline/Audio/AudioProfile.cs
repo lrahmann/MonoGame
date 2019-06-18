@@ -54,6 +54,7 @@ namespace Microsoft.Xna.Framework.Content.Pipeline.Audio
 
         protected static int QualityToSampleRate(ConversionQuality quality, int sourceSampleRate)
         {
+            return Math.Max(8000, sourceSampleRate);
             switch (quality)
             {
                 case ConversionQuality.Low:
