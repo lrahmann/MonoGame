@@ -5,7 +5,7 @@
 -->
 
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <UsingTask TaskName="MonoGame.Build.Tasks.CollectContentReferences" AssemblyFile="bin\Windows\AnyCPU\Debug\MonoGame.Build.Tasks.dll" />
+  <UsingTask TaskName="MonoGame.Build.Tasks.CollectContentReferences" AssemblyFile="bin\$(MonoGamePlatform)\AnyCPU\Debug\MonoGame.Build.Tasks.dll" />
   <!-- Add MonoGameContentReference to item type selection in Visual Studio -->
   <ItemGroup>
     <AvailableItemName Include="MonoGameContentReference" />
@@ -23,7 +23,7 @@
       <MonoExe Condition=" '$(OS)' != 'Windows_NT' And Exists ('/usr/local/bin/mono') ">/usr/local/bin/mono</MonoExe>
       <MonoExe Condition=" '$(OS)' != 'Windows_NT' And Exists ('/usr/bin/mono') ">/usr/bin/mono</MonoExe>
       <MonoExe Condition=" '$(OS)' != 'Windows_NT' And '$(MonoExe)' == '' ">mono</MonoExe>
-      <MonoGameContentBuilderExe Condition="'$(MonoGameContentBuilderExe)' == ''">$(MSBuildThisFileDirectory)..\Tools\MGCB\bin\Windows\AnyCPU\Debug\MGCB.exe</MonoGameContentBuilderExe>
+      <MonoGameContentBuilderExe Condition="'$(MonoGameContentBuilderExe)' == ''">$(MSBuildThisFileDirectory)..\Tools\MGCB\bin\$(MonoGamePlatform)\AnyCPU\Debug\MGCB.exe</MonoGameContentBuilderExe>
       <MonoGameContentBuilderCmd>&quot;$(MonoGameContentBuilderExe)&quot;</MonoGameContentBuilderCmd>
       <MonoGameContentBuilderCmd Condition=" '$(OS)' != 'Windows_NT' ">$(MonoExe) $(MonoGameContentBuilderCmd)</MonoGameContentBuilderCmd>
       <PlatformResourcePrefix Condition="'$(MonoGamePlatform)' == 'MacOSX'">$(MonoMacResourcePrefix)</PlatformResourcePrefix>
