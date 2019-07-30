@@ -741,11 +741,13 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="effects">Modificators for drawing. Can be combined.</param>
         /// <param name="layerDepth">A depth of the layer of this string.</param>
         /// <param name="images">A list of the images to be drawn.</param>
+        /// <param name="imageColor">The color of the images if any. Else we take white with an appropiate opacity</param>
         /// <returns>The actual number of drawn images.</returns>
         public unsafe int DrawStringWithImages(
             SpriteFont spriteFont, string text, Vector2 position, Color color,
-            float rotation, Vector2 origin, Vector2 scale, SpriteEffects effects, float layerDepth, List<Texture2D> images)
+            float rotation, Vector2 origin, Vector2 scale, SpriteEffects effects, float layerDepth, List<Texture2D> images, Color imageColor = default)
         {
+            if (imageColor == default) imageColor = new Color(color.A, color.A, color.A, color.A);
             float sortKey = 0;
             // set SortKey based on SpriteSortMode.
             switch (_sortMode)
@@ -910,7 +912,7 @@ namespace Microsoft.Xna.Framework.Graphics
                     }
 
 
-                    if (c == '\uE000' || c == '\uE001' || c == '\uE002' || c == '\uE003')    // if we encounter a placeholder-char then draw the next image
+                    if (c >= '\uE000' && c <= '\uE003')    // if we encounter a placeholder-char then draw the next image
                     {
                         //we have two whitespaces
                         float totalPadding = 0;// (defaultGlyph.WidthIncludingBearings)/2;
@@ -945,7 +947,7 @@ namespace Microsoft.Xna.Framework.Graphics
                                  p.Y,
                                 width * scale.X,
                                 height * scale.Y,
-                                new Color(color.A, color.A, color.A, color.A),
+                                imageColor,
                                  Vector2.Zero,
                                  Vector2.One,
                                  layerDepth);
@@ -960,7 +962,7 @@ namespace Microsoft.Xna.Framework.Graphics
                                  height * scale.Y,
                                  sin,
                                  cos,
-                                new Color(color.A, color.A, color.A, color.A),
+                                imageColor,
                                  Vector2.Zero,
                                  Vector2.One,
                                  layerDepth);

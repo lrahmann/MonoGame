@@ -399,7 +399,6 @@ namespace Microsoft.Xna.Framework.Graphics
 
             // Save sampling description.
             _sampleDescription = desc.SampleDescription;
-
             return new SharpDX.Direct3D11.Texture2D(GraphicsDevice._d3dDevice, desc);
         }
 
