@@ -745,9 +745,9 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <returns>The actual number of drawn images.</returns>
         public unsafe int DrawStringWithImages(
             SpriteFont spriteFont, string text, Vector2 position, Color color,
-            float rotation, Vector2 origin, Vector2 scale, SpriteEffects effects, float layerDepth, List<Texture2D> images, Color imageColor = default)
+            float rotation, Vector2 origin, Vector2 scale, SpriteEffects effects, float layerDepth, List<Texture2D> images, Color imageColor = default(Color))
         {
-            if (imageColor == default) imageColor = new Color(color.A, color.A, color.A, color.A);
+            if (imageColor == default(Color)) imageColor = new Color(color.A, color.A, color.A, color.A);
             float sortKey = 0;
             // set SortKey based on SpriteSortMode.
             switch (_sortMode)
@@ -912,7 +912,7 @@ namespace Microsoft.Xna.Framework.Graphics
                     }
 
 
-                    if (c >= '\uE000' && c <= '\uE003')    // if we encounter a placeholder-char then draw the next image
+                    if (c >= '\uE000' && c <= '\uE004')    // if we encounter a placeholder-char then draw the next image
                     {
                         //we have two whitespaces
                         float totalPadding = 0;// (defaultGlyph.WidthIncludingBearings)/2;
