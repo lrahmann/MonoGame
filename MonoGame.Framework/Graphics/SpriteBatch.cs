@@ -3,6 +3,7 @@
 // file 'LICENSE.txt', which is part of this source code package.
 
 using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace Microsoft.Xna.Framework.Graphics
@@ -371,6 +372,286 @@ namespace Microsoft.Xna.Framework.Graphics
             var scaleVec = new Vector2(scale, scale);
             Draw(texture, position, sourceRectangle, color, rotation, origin, scaleVec, effects, layerDepth);
 		}
+
+        /// <summary>
+        /// Submit a text string of sprites for drawing in the current batch.
+        /// </summary>
+        /// <param name="spriteFont">A font.</param>
+        /// <param name="text">The text which will be drawn.</param>
+        /// <param name="position">The drawing location on screen.</param>
+        /// <param name="color">A color mask.</param>
+        /// <param name="rotation">A rotation of this string.</param>
+        /// <param name="origin">Center of the rotation. 0,0 by default.</param>
+        /// <param name="scale">A scaling of this string.</param>
+        /// <param name="effects">Modificators for drawing. Can be combined.</param>
+        /// <param name="layerDepth">A depth of the layer of this string.</param>
+        /// <param name="images">A list of the images to be drawn.</param>
+        /// <param name="imageColor">The color of the images if any. Else we take white with an appropiate opacity</param>
+        /// <returns>The actual number of drawn images.</returns>
+        public int DrawStringWithImages(
+            SpriteFont spriteFont, string text, Vector2 position, Color color,
+            float rotation, Vector2 origin, Vector2 scale, SpriteEffects effects, float layerDepth, List<Texture2D> images, Color imageColor = default(Color))
+        {
+            if (imageColor == default(Color)) imageColor = new Color(color.A, color.A, color.A, color.A);
+            float sortKey = 0;
+            // set SortKey based on SpriteSortMode.
+            switch (_sortMode)
+            {
+                // Comparison of Texture objects.
+                case SpriteSortMode.Texture:
+                    sortKey = spriteFont.Texture.SortingKey;
+                    break;
+                // Comparison of Depth
+                case SpriteSortMode.FrontToBack:
+                    sortKey = layerDepth;
+                    break;
+                // Comparison of Depth in reverse
+                case SpriteSortMode.BackToFront:
+                    sortKey = -layerDepth;
+                    break;
+            }
+
+            var flipAdjustment = Vector2.Zero;
+
+            var flippedVert = (effects & SpriteEffects.FlipVertically) == SpriteEffects.FlipVertically;
+            var flippedHorz = (effects & SpriteEffects.FlipHorizontally) == SpriteEffects.FlipHorizontally;
+
+            if (flippedVert || flippedHorz)
+            {
+                Vector2 size;
+
+                var source = new SpriteFont.CharacterSource(text);
+                spriteFont.MeasureString(ref source, out size);
+
+                if (flippedHorz)
+                {
+                    origin.X *= -1;
+                    flipAdjustment.X = -size.X;
+                }
+
+                if (flippedVert)
+                {
+                    origin.Y *= -1;
+                    flipAdjustment.Y = spriteFont.LineSpacing - size.Y;
+                }
+            }
+
+            Matrix transformation = Matrix.Identity;
+            float cos = 0, sin = 0;
+            if (rotation == 0)
+            {
+                transformation.M11 = (flippedHorz ? -scale.X : scale.X);
+                transformation.M22 = (flippedVert ? -scale.Y : scale.Y);
+                transformation.M41 = ((flipAdjustment.X - origin.X) * transformation.M11) + position.X;
+                transformation.M42 = ((flipAdjustment.Y - origin.Y) * transformation.M22) + position.Y;
+            }
+            else
+            {
+                cos = (float)Math.Cos(rotation);
+                sin = (float)Math.Sin(rotation);
+                transformation.M11 = (flippedHorz ? -scale.X : scale.X) * cos;
+                transformation.M12 = (flippedHorz ? -scale.X : scale.X) * sin;
+                transformation.M21 = (flippedVert ? -scale.Y : scale.Y) * (-sin);
+                transformation.M22 = (flippedVert ? -scale.Y : scale.Y) * cos;
+                transformation.M41 = (((flipAdjustment.X - origin.X) * transformation.M11) + (flipAdjustment.Y - origin.Y) * transformation.M21) + position.X;
+                transformation.M42 = (((flipAdjustment.X - origin.X) * transformation.M12) + (flipAdjustment.Y - origin.Y) * transformation.M22) + position.Y;
+            }
+
+            var offset = Vector2.Zero;
+            var firstGlyphOfLine = true;
+            int crtImageIdx = 0;
+            //var defaultGlyph = spriteFont.Glyphs[spriteFont.DefaultCharacter.Value];
+
+
+            //fixed (SpriteFont.Glyph* pGlyphs = spriteFont.Glyphs)
+                for (var i = 0; i < text.Length; ++i)
+                {
+                    var c = text[i];
+
+                    if (c == '\r')
+                        continue;
+
+                    if (c == '\n')
+                    {
+                        offset.X = 0;
+                        offset.Y += spriteFont.LineSpacing;
+                        firstGlyphOfLine = true;
+                        continue;
+                    }
+                if (!spriteFont.Glyphs.ContainsKey(c))
+                {
+                    c = spriteFont.DefaultCharacter.Value;
+                }
+
+                var pCurrentGlyph = spriteFont.Glyphs[c];
+
+                    // The first character on a line might have a negative left side bearing.
+                    // In this scenario, SpriteBatch/SpriteFont normally offset the text to the right,
+                    //  so that text does not hang off the left side of its rectangle.
+                if (firstGlyphOfLine)
+                    {
+                        offset.X = Math.Max(pCurrentGlyph.LeftSideBearing, 0);
+                        firstGlyphOfLine = false;
+                    }
+                    else
+                    {
+                        offset.X += spriteFont.Spacing + pCurrentGlyph.LeftSideBearing;
+                    }
+
+                    var p = offset;
+
+                    if (flippedHorz)
+                        p.X += pCurrentGlyph.BoundsInTexture.Width;
+                    p.X += pCurrentGlyph.Cropping.X;
+
+                    if (flippedVert)
+                        p.Y += pCurrentGlyph.BoundsInTexture.Height - spriteFont.LineSpacing;
+                    p.Y += pCurrentGlyph.Cropping.Y;
+
+                    Vector2.Transform(ref p, ref transformation, out p);
+
+                    var item = _batcher.CreateBatchItem();
+                    item.Texture = spriteFont.Texture;
+                    item.SortKey = sortKey;
+
+                    _texCoordTL.X = pCurrentGlyph.BoundsInTexture.X * spriteFont.Texture.TexelWidth;
+                    _texCoordTL.Y = pCurrentGlyph.BoundsInTexture.Y * spriteFont.Texture.TexelHeight;
+                    _texCoordBR.X = (pCurrentGlyph.BoundsInTexture.X + pCurrentGlyph.BoundsInTexture.Width) * spriteFont.Texture.TexelWidth;
+                    _texCoordBR.Y = (pCurrentGlyph.BoundsInTexture.Y + pCurrentGlyph.BoundsInTexture.Height) * spriteFont.Texture.TexelHeight;
+
+                    if ((effects & SpriteEffects.FlipVertically) != 0)
+                    {
+                        var temp = _texCoordBR.Y;
+                        _texCoordBR.Y = _texCoordTL.Y;
+                        _texCoordTL.Y = temp;
+                    }
+                    if ((effects & SpriteEffects.FlipHorizontally) != 0)
+                    {
+                        var temp = _texCoordBR.X;
+                        _texCoordBR.X = _texCoordTL.X;
+                        _texCoordTL.X = temp;
+                    }
+
+                    if (rotation == 0f)
+                    {
+                        item.Set(p.X,
+                                p.Y,
+                                pCurrentGlyph.BoundsInTexture.Width * scale.X,
+                                pCurrentGlyph.BoundsInTexture.Height * scale.Y,
+                                color,
+                                _texCoordTL,
+                                _texCoordBR,
+                                layerDepth);
+                    }
+                    else
+                    {
+                        item.Set(p.X,
+                                p.Y,
+                                0,
+                                0,
+                                pCurrentGlyph.BoundsInTexture.Width * scale.X,
+                                pCurrentGlyph.BoundsInTexture.Height * scale.Y,
+                                sin,
+                                cos,
+                                color,
+                                _texCoordTL,
+                                _texCoordBR,
+                                layerDepth);
+                    }
+
+
+                    if (c >= '\uE000' && c <= '\uE004')    // if we encounter a placeholder-char then draw the next image
+                    {
+                        //we have two whitespaces
+                        float totalPadding = 0;// (defaultGlyph.WidthIncludingBearings)/2;
+                        float lineWidth = (pCurrentGlyph.WidthIncludingBearings);
+
+                        float buttonMaxHeight = pCurrentGlyph.Cropping.Height;
+                        float charHeight = pCurrentGlyph.BoundsInTexture.Height;
+                        float buttonMaxWidth = lineWidth - totalPadding;
+
+                        var texture = images[crtImageIdx];
+
+                        float scaling = Math.Min(buttonMaxHeight / texture.Height, buttonMaxWidth / texture.Width);
+                        float width = scaling * texture.Width;
+                        float height = scaling * texture.Height;
+
+
+                        p = offset;
+                        //p.X += (lineWidth - width) / 2;
+                        //p.Y += (buttonMaxHeight - height)/3;
+
+                        p.Y += (charHeight - height) / 2;
+                        Vector2.Transform(ref p, ref transformation, out p);
+
+                        item.Texture = images[crtImageIdx];
+
+                        // set SortKey based on SpriteSortMode.
+                        item.SortKey = _sortMode == SpriteSortMode.Texture ? images[crtImageIdx].SortingKey : 0;
+
+                        if (rotation == 0f)
+                        {
+                            item.Set(p.X,
+                                 p.Y,
+                                width * scale.X,
+                                height * scale.Y,
+                                imageColor,
+                                 Vector2.Zero,
+                                 Vector2.One,
+                                 layerDepth);
+                        }
+                        else
+                        {
+                            item.Set(p.X,
+                                 p.Y,
+                                 0,
+                                 0,
+                                 width * scale.X,
+                                 height * scale.Y,
+                                 sin,
+                                 cos,
+                                imageColor,
+                                 Vector2.Zero,
+                                 Vector2.One,
+                                 layerDepth);
+                        }
+                        crtImageIdx++;
+
+                    }
+                    // alternatively, we also could change the item's Texture and adjust the rectangle and tex-coordinates in item.Set()?
+
+                    offset.X += pCurrentGlyph.Width + pCurrentGlyph.RightSideBearing;
+                }
+
+            // We need to flush if we're using Immediate sort mode.
+            FlushIfNeeded();
+
+            return crtImageIdx;
+        }
+
+
+
+        /// <summary>
+        /// Submit a text string of sprites for drawing in the current batch.
+        /// </summary>
+        /// <param name="spriteFont">A font.</param>
+        /// <param name="text">The text which will be drawn.</param>
+        /// <param name="position">The drawing location on screen.</param>
+        /// <param name="color">A color mask.</param>
+        /// <param name="rotation">A rotation of this string.</param>
+        /// <param name="origin">Center of the rotation. 0,0 by default.</param>
+        /// <param name="scale">A scaling of this string.</param>
+        /// <param name="effects">Modificators for drawing. Can be combined.</param>
+        /// <param name="layerDepth">A depth of the layer of this string.</param>
+        /// <param name="images">A list of the images to be drawn.</param>
+        /// <returns>The actual number of drawn images.</returns>
+        public int DrawStringWithImages(
+            SpriteFont spriteFont, string text, Vector2 position, Color color,
+            float rotation, Vector2 origin, float scale, SpriteEffects effects, float layerDepth, List<Texture2D> images)
+        {
+            var scaleVec = new Vector2(scale, scale);
+            return DrawStringWithImages(spriteFont, text, position, color, rotation, origin, scaleVec, effects, layerDepth, images);
+        }
 
         /// <summary>
         /// Submit a sprite for drawing in the current batch.

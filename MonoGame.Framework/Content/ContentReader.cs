@@ -21,6 +21,7 @@ namespace Microsoft.Xna.Framework.Content
         private ContentTypeReader[] typeReaders;
 		internal int version;
 		internal int sharedResourceCount;
+        public int SharedResourceCount { get => sharedResourceCount; }
 
         internal ContentTypeReader[] TypeReaders
         {
@@ -90,7 +91,7 @@ namespace Microsoft.Xna.Framework.Content
             return result;
         }
 
-        internal void InitializeTypeReaders()
+        public void InitializeTypeReaders()
         {
             typeReaderManager = new ContentTypeReaderManager();
             typeReaders = typeReaderManager.LoadAssetReaders(this);
@@ -293,12 +294,12 @@ namespace Microsoft.Xna.Framework.Content
             return result;
         }
 
-        internal new int Read7BitEncodedInt()
+        public new int Read7BitEncodedInt()
         {
             return base.Read7BitEncodedInt();
         }
 		
-		internal BoundingSphere ReadBoundingSphere()
+		public BoundingSphere ReadBoundingSphere()
 		{
 			var position = ReadVector3();
             var radius = ReadSingle();

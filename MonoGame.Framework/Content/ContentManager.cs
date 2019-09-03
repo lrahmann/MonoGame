@@ -316,7 +316,7 @@ namespace Microsoft.Xna.Framework.Content
 			return (T)result;
 		}
 
-        private ContentReader GetContentReaderFromXnb(string originalAssetName, Stream stream, BinaryReader xnbReader, Action<IDisposable> recordDisposableObject)
+        public ContentReader GetContentReaderFromXnb(string originalAssetName, Stream stream, BinaryReader xnbReader, Action<IDisposable> recordDisposableObject)
         {
             // The first 4 bytes should be the "XNB" header. i use that to detect an invalid file
             byte x = xnbReader.ReadByte();

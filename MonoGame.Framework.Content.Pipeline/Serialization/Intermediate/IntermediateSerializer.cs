@@ -281,7 +281,7 @@ namespace Microsoft.Xna.Framework.Content.Pipeline.Serialization.Intermediate
                 return (foundType == null) ? null : foundType.MakeGenericType(genericArguments);
             }
 
-            foundType = (from assembly in AppDomain.CurrentDomain.GetAssemblies()
+            foundType = (from assembly in AppDomain.CurrentDomain.GetAssemblies().Where(x=>x.FullName.EndsWith("MediaFoundation"))
                          from type in assembly.GetTypes()
                          where type.FullName == typeName || type.Name == typeName
                          select type).FirstOrDefault();

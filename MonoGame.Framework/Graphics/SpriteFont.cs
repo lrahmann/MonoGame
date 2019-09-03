@@ -23,7 +23,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		
 		private readonly Texture2D _texture;
         
-		internal Dictionary<char, Glyph> Glyphs { get { return _glyphs; } }
+		public Dictionary<char, Glyph> Glyphs { get { return _glyphs; } }
 
 		class CharComparer: IEqualityComparer<char>
 		{
